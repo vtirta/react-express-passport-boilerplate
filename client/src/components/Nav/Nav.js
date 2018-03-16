@@ -12,6 +12,9 @@ const Nav = () =>
         <a href="/" className="navbar-brand">
           React Reading List
         </a>
+        <a href="/users" className="navbar-brand">
+          List of Users
+        </a>
       </div>
     </div>
   </nav>;
