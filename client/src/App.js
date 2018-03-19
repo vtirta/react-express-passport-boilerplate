@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Books from "./pages/Books";
 import Detail from "./pages/Detail";
 import Users from "./pages/Users";
+import SignIn from "./pages/SignIn";
 import NoMatch from "./pages/NoMatch";
 import Nav from "./components/Nav";
 
@@ -15,6 +16,7 @@ const App = () =>
         <Route exact path="/books" component={Books} />
         <Route exact path="/users" component={Users} />
         <Route exact path="/books/:id" component={Detail} />
+        <Route exact path="/signin" component={SignIn} />
         <Route component={NoMatch} />
       </Switch>
     </div>
