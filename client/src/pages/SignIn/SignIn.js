@@ -30,6 +30,10 @@ class SignIn extends Component {
     });
   };
 
+  handleFocus = event => {
+    event.target.select();
+  };
+
   handleSignIn = event => {
     event.preventDefault();
     if (this.state.canSignIn) {
@@ -48,17 +52,18 @@ class SignIn extends Component {
       <Container fluid>
         <form className="form-signin">
           <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
-          <label for="username" className="sr-only">Username</label>
+          <label htmlFor="username" className="sr-only">Username</label>
           <Input
             value={this.state.username}
             onChange={this.handleInputChange}
+            onFocus={this.handleFocus}
             name="username"
             placeholder="Username or email (required)"
             className="form-control"
             required=""
-            autofocus=""
+            autoFocus={true}
           />
-          <label for="password" className="sr-only">Password</label>
+          <label htmlFor="password" className="sr-only">Password</label>
           <Input
             value={this.state.password}
             onChange={this.handleInputChange}
