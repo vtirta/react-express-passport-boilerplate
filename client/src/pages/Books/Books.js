@@ -12,7 +12,8 @@ class Books extends Component {
     books: [],
     title: "",
     author: "",
-    synopsis: ""
+    synopsis: "",
+    genre: ""
   };
 
   componentDidMount() {
@@ -42,6 +43,7 @@ class Books extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
+
     if (this.state.title && this.state.author) {
       API.saveBook({
         title: this.state.title,
@@ -80,6 +82,15 @@ class Books extends Component {
                 name="synopsis"
                 placeholder="Synopsis (Optional)"
               />
+              <label>
+                Genre:
+                <select name="genre" value={this.state.genre} onChange={this.handleInputChange}>
+                  <option value="scifi">Science Fiction</option>
+                  <option value="nonfiction">Non Fiction</option>
+                  <option value="fiction">Fiction</option>
+                  <option value="biography">Biography</option>
+                </select>
+              </label>
               <FormBtn
                 disabled={!(this.state.author && this.state.title)}
                 onClick={this.handleFormSubmit}
