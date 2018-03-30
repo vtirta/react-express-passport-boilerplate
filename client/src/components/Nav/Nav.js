@@ -10,10 +10,10 @@ const Nav = () =>
     <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
       <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
         <li className="nav-item active">
-          <a className="nav-link" href="/">React Reading List</a>
+          <a className="nav-link" href="/books">React Reading List</a>
         </li>
         <li className="nav-item">
-          <a className="nav-link" href="/">List of Users</a>
+          <a className="nav-link" href="/users">List of Users</a>
         </li>
       </ul>
       <form className="form-inline my-2 my-lg-0">

@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import API from "../../utils/API";
+import Auth from '../../utils/Auth';
 import { Link } from "react-router-dom";
 import { Container } from "../../components/Grid";
 import { Input } from "../../components/Form";
 
 class SignIn extends Component {
   state = {
-    username: "",
+    email: "",
     password: "",
     errorMessage: null,
     session: null
@@ -16,11 +17,18 @@ class SignIn extends Component {
   }
 
   authenticate = () => {
-    API.authenticateUser(this.state.username, this.state.password)
-      .then(res =>
-        this.setState({ session: true })
-      )
-      .catch(err => console.log(err));
+    const userData = {
+      email: this.state.email,
+      password: this.state.password
+    };
+
+    API.authenticateUser(userData)
+      .then(res => {
+        // clear error message
+        this.setState({ errorMessage: null });
+        Auth.authenticateUser(res.data.token);
+      })
+      .catch(err => this.setState({ errorMessage: err.response.data.message }));
   };
 
   handleInputChange = event => {
@@ -36,12 +44,8 @@ class SignIn extends Component {
 
   handleSignIn = event => {
     event.preventDefault();
-    if (this.state.canSignIn) {
-      API.authenticateUser(this.state.username, this.state.password)
-        .then(res =>
-          this.setState({ session: true })
-        )
-        .catch(err => console.log(err));
+    if (this.state.email && this.state.password && this.state.password.length >= 6) {
+      this.authenticate();
     } else {
       this.setState({ errorMessage: "Please enter valid username and password to sign in."})
     }
@@ -52,13 +56,13 @@ class SignIn extends Component {
       <Container fluid>
         <form className="form-signin">
           <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
-          <label htmlFor="username" className="sr-only">Username</label>
+          <label htmlFor="username" className="sr-only">email</label>
           <Input
-            value={this.state.username}
+            value={this.state.email}
             onChange={this.handleInputChange}
             onFocus={this.handleFocus}
-            name="username"
-            placeholder="Username or email (required)"
+            name="email"
+            placeholder="Email (required)"
             className="form-control"
             required=""
             autoFocus={true}
@@ -78,10 +82,13 @@ class SignIn extends Component {
               <input type="checkbox" value="remember-me"/> Remember me
             </label>
           </div>
+          <div className="checkbox mb-3 text-danger">
+            {this.state.errorMessage}
+          </div>
           <div className="mb-3">
             <button
-              disabled={!(this.state.username && this.state.password && this.state.password.length >= 6)}
-              onClick={this.handleFormSubmit}
+              disabled={!(this.state.email && this.state.password && this.state.password.length >= 6)}
+              onClick={this.handleSignIn}
               className="btn btn-lg btn-primary btn-block"
             >
               Sign In
