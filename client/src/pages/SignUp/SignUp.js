@@ -1,20 +1,21 @@
 import React, { Component } from "react";
 import API from "../../utils/API";
 import Auth from '../../utils/Auth';
-import { Link } from "react-router-dom";
 import { Container } from "../../components/Grid";
 import { Input } from "../../components/Form";
+import "./SignUp.css";
 
-class SignIn extends Component {
+class SignUp extends Component {
   state = {
+    name: "",
     email: "",
     password: "",
-    errorMessage: null,
-    session: null
+    userType: "",
+    errorMessage: null
   };
 
   componentDidMount() {
-  }
+  };
 
   authenticate = () => {
     const userData = {
@@ -27,6 +28,28 @@ class SignIn extends Component {
         // clear error message
         this.setState({ errorMessage: null });
         Auth.authenticateUser(res.data.token);
+
+        // hard redirect to / to reload all the state and nav
+        window.location.href = "/";
+      })
+      .catch(err => this.setState({ errorMessage: err.response.data.message }));
+  };
+
+  signUp = () => {
+    const userData = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      userType: this.state.userType
+    };
+
+    API.signUp(userData)
+      .then(res => {
+        // clear error message
+        this.setState({ errorMessage: null });
+
+        // authenticate the user after successful sign up
+        this.authenticate();
       })
       .catch(err => this.setState({ errorMessage: err.response.data.message }));
   };
@@ -42,12 +65,12 @@ class SignIn extends Component {
     event.target.select();
   };
 
-  handleSignIn = event => {
+  handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.email && this.state.password && this.state.password.length >= 6) {
-      this.authenticate();
+    if (this.state.name && this.state.email && this.state.password && this.state.userType && this.state.password.length >= 8) {
+      this.signUp();
     } else {
-      this.setState({ errorMessage: "Please enter valid username and password to sign in."})
+      this.setState({ errorMessage: "Please enter all required fields to sign up."})
     }
   };
 
@@ -55,8 +78,19 @@ class SignIn extends Component {
     return (
       <Container fluid>
         <form className="form-signin">
-          <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
-          <label htmlFor="username" className="sr-only">email</label>
+          <h1 className="h4 mb-3 font-weight-normal">Please sign up</h1>
+          <label htmlFor="username" className="sr-only">Name</label>
+          <Input
+            value={this.state.name}
+            onChange={this.handleInputChange}
+            onFocus={this.handleFocus}
+            name="name"
+            placeholder="Name (required)"
+            className="form-control"
+            required=""
+            autoFocus={true}
+          />
+          <label htmlFor="username" className="sr-only">Email</label>
           <Input
             value={this.state.email}
             onChange={this.handleInputChange}
@@ -77,33 +111,35 @@ class SignIn extends Component {
             className="form-control"
             required=""
           />
-          <div className="checkbox mb-3">
-            <label>
-              <input type="checkbox" value="remember-me"/> Remember me
-            </label>
-          </div>
+          <label htmlFor="password" className="sr-only">Password</label>
+          <select
+            value={this.state.userType}
+            onChange={this.handleInputChange}
+            name="userType"
+            placeholder="User type"
+            className="form-control"
+            required=""
+          >
+            <option value="" disabled>Select role</option>
+            <option value="instructor">Instructor</option>
+            <option value="student">Student</option>
+          </select>
           <div className="checkbox mb-3 text-danger">
             {this.state.errorMessage}
           </div>
           <div className="mb-3">
             <button
               disabled={!(this.state.email && this.state.password && this.state.password.length >= 6)}
-              onClick={this.handleSignIn}
+              onClick={this.handleFormSubmit}
               className="btn btn-lg btn-primary btn-block"
             >
-              Sign In
+              Sign Up
             </button>
           </div>
         </form>
-        <p className="mt-5 mb-3">
-          Don't have an account? 
-          <Link to={"/signup"}>
-            Sign Up
-          </Link>
-        </p>
       </Container>
     );
   }
 }
 
-export default SignIn;
+export default SignUp;
