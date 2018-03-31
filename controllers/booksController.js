@@ -17,6 +17,12 @@ module.exports = {
             _id: "$author",
             count: { $sum: 1 }
           }
+        },
+        {
+          $addFields: {
+            key: "$_id",
+            value: "$count"
+          }
         }
       ])
       .then(dbModel => res.json(dbModel))
