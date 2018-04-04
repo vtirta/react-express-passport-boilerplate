@@ -67,7 +67,7 @@ class SignUp extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.name && this.state.email && this.state.password && this.state.userType && this.state.password.length >= 8) {
+    if (this.state.name && this.state.email && this.state.password && this.state.userType) {
       this.signUp();
     } else {
       this.setState({ errorMessage: "Please enter all required fields to sign up."})
